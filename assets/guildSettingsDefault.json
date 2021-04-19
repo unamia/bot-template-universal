@@ -1,0 +1,13 @@
+{
+	"id": "server id",
+	"currency": "$",
+	"prefixes": ["r."],
+
+	"prohibitedChannels": [],
+	"economicsEnabled": false,
+	"loggingChannel": null,
+	"starboardChannel": null,
+	"starboardRequiredStars": null,
+	"starboardEnabled": false,
+	"loggingEnabled": false
+}
