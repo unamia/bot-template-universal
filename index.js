@@ -5,9 +5,7 @@ global.client = new Discord.Client();
 global.assets = new Map();
 global.utils = new Map();
 global.commands = new Map();
-global.stores = {
-	guildSettings: new Map(),
-};
+global.stores = {};
 const fs = require("fs-extra");
 
 const mongoClient = new mongodb.MongoClient(config.MongoURI, {
