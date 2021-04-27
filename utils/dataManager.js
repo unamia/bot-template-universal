@@ -2,11 +2,10 @@ class DataManager {
 	constructor(structName, ...ids) {
 		this.structName = structName;
 		this.id = ids.join("_");
-
-		this._store = stores[this.structName].get(this.id);
 		if (!stores[this.structName]) {
 			stores[this.structName] = new Map();
 		}
+		this._store = stores[this.structName].get(this.id);
 	}
 	async fetch() {
 		if (stores[this.structName].get(this.id)) {

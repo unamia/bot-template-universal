@@ -1,7 +1,7 @@
 global.mongodb = require("mongodb");
 global.Discord = require("discord.js");
 global.config = require("./config");
-global.client = new Discord.Client();
+
 global.assets = new Map();
 global.utils = new Map();
 global.commands = new Map();
@@ -27,7 +27,10 @@ fs.readdirSync("./utils").forEach((file) => {
 (async () => {
 	await mongoClient.connect();
 	global.db = mongoClient.db("replica");
+	utils.get("djsExtend")();
+	global.client = new Discord.Client();
 	await client.login(config.token);
+	utils.get("servicesCore")();
 	console.log(assets.get("ascii").toString());
 	console.log(`Logged in as ${client.user.tag}`);
 
