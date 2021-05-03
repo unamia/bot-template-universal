@@ -25,12 +25,15 @@ fs.readdirSync("./utils").forEach((file) => {
 	utils.set(codename, require("./utils/" + file));
 });
 (async () => {
+	let ActionManager = utils.get("actionManager");
 	await mongoClient.connect();
 	global.db = mongoClient.db("replica");
 	utils.get("djsExtend")();
+
 	global.client = new Discord.Client();
 	await client.login(config.token);
 	utils.get("servicesCore")();
+	global.action = new ActionManager();
 	console.log(assets.get("ascii").toString());
 	console.log(`Logged in as ${client.user.tag}`);
 
