@@ -16,9 +16,17 @@ class DataManager {
 				.findOne({ id: this.id });
 
 			if (!fetchedFromDb) {
-				let template = JSON.parse(
-					assets.get(`${this.structName}Default`).toString()
-				);
+				let template = await db
+					.collection("structures")
+					.findOne({ name: this.structName });
+				if (!template) {
+					await db
+						.collection("structures")
+						.insertOne({ name: this.structName, template: {} });
+					template = {};
+				} else {
+					template = template.template;
+				}
 				template.id = this.id;
 				fetchedFromDb = await db
 					.collection(this.structName)
