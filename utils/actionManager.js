@@ -1,9 +1,10 @@
+let fs = require("fs");
 class ActionManager {
 	constructor() {
 		this.schedule = new Map();
 		this.actions = new Map(
 			fs
-				.readdirSync("../actions")
+				.readdirSync("./actions")
 				.map((s) => [
 					s.split(".").slice(0, -1).join(""),
 					require("../actions/" + s),
@@ -47,3 +48,4 @@ class ActionManager {
 		this.removeAction(id);
 	}
 }
+module.exports = ActionManager;
