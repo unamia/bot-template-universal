@@ -1,6 +1,6 @@
 module.exports = async (message) => {
 	let usedPrefix = [
-		...message.guild.settings.get("prefixes"),
+		...(message.guild.settings.get("prefixes") || []),
 		config.permanentPrefix,
 		`<@${client.user.id}>`,
 		`<!@${client.user.id}>`,
@@ -25,7 +25,7 @@ module.exports = async (message) => {
 						.setColor("#364547")
 						.setTitle("Error")
 						.setDescription(
-							`Replica is missing following permissions: ${botMissing.map(
+							`Bot is missing following permissions: ${botMissing.map(
 								(p) => `\`\`${p}\`\``
 							)}`
 						)

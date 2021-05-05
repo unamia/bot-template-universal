@@ -3,8 +3,8 @@ module.exports = async (message) => {
 		return;
 	}
 	if (message.guild) {
-		let GuildSettings = utils.get("guildSettings");
-		message.guild.settings = new GuildSettings(message.guild.id);
+		let dataManager = utils.get("dataManager");
+		message.guild.settings = new dataManager("guildSettings", message.guild.id);
 		await message.guild.settings.fetch();
 		utils.get("commandHandler")(message);
 	} else {
