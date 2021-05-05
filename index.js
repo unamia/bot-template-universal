@@ -18,7 +18,10 @@ fs.readdirSync("./assets").forEach((file) => {
 });
 fs.readdirSync("./commands").forEach((file) => {
 	let codename = file.split(".").slice(0, -1).join(".");
-	commands.set(codename, require("./commands/" + file));
+	let mod = require("./commands/" + file);
+	[...(mod.altNames || []), codename].forEach((cn) => {
+		commands.set(cn, mod);
+	});
 });
 fs.readdirSync("./utils").forEach((file) => {
 	let codename = file.split(".").slice(0, -1).join(".");
@@ -27,10 +30,12 @@ fs.readdirSync("./utils").forEach((file) => {
 (async () => {
 	let ActionManager = utils.get("actionManager");
 	await mongoClient.connect();
-	global.db = mongoClient.db("replica");
+	global.db = mongoClient.db(config.database);
 	utils.get("djsExtend")();
 
-	global.client = new Discord.Client();
+	global.client = new Discord.Client({
+		ws: { intents: Discord.Intents.ALL },
+	});
 	await client.login(config.token);
 	utils.get("servicesCore")();
 	global.action = new ActionManager();
