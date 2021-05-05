@@ -43,6 +43,9 @@ module.exports = async (message) => {
 						)
 				);
 			}
+			await message.author.data.fetch();
+			await message.member.data.fetch();
+			await message.guild.data.fetch();
 			commands.get(command).run(message, args);
 		}
 	}
