@@ -14,10 +14,10 @@ module.exports = async (message) => {
 		let [command, ...args] = pureMessage.split(" ").filter((x) => x !== "");
 		if (commands.get(command)) {
 			let botMissing = message.guild.me.permissions.missing(
-				commands.get(command).botPerms
+				commands.get(command).botPerms || []
 			);
 			let userMissing = message.member.permissions.missing(
-				commands.get(command).userPerms
+				commands.get(command).userPerms || []
 			);
 			if (botMissing.length > 0) {
 				return message.reply(
