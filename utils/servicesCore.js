@@ -1,4 +1,3 @@
-const events = require("events");
 const fs = require("fs");
 const path = require("path");
 module.exports = async () => {
