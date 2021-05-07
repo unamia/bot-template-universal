@@ -1,12 +1,13 @@
 const events = require("events");
 const fs = require("fs");
+const path = require("path");
 module.exports = async () => {
 	let services = new Map(
 		fs
-			.readdirSync("../services")
+			.readdirSync(path.join(__dirname, "../services"))
 			.map((s) => [
 				s.split(".").slice(0, -1).join(""),
-				require("../services/" + s),
+				require(path.join(__dirname, "../services", s)),
 			])
 	);
 
