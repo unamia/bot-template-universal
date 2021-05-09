@@ -1,3 +1,5 @@
+let fs = require("fs-extra"),
+	path = require("path");
 module.exports = async function registerCommands(root, dir) {
 	return await Promise.all(
 		fs.readdirSync(dir, { withFileTypes: true }).map(async (fse) => {
