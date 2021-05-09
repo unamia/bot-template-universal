@@ -1,4 +1,5 @@
 exports.run = async (message, args) => {
+	console.log(args);
 	if (!config.admins.includes(message.author.id)) {
 		return;
 	}
@@ -11,7 +12,7 @@ exports.run = async (message, args) => {
 	} catch (e) {
 		res = e;
 	}
-	if (res.toString() == "[object Object]") {
+	if (String(res) == "[object Object]") {
 		res = JSON.stringify(res);
 	}
 	message.inlineReply(

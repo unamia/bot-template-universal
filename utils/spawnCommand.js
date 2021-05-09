@@ -30,4 +30,6 @@ module.exports = async function spawnCommand(command, args, message) {
 				)
 		);
 	}
+
+	command.run(message, args);
 };
