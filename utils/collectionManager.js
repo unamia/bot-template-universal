@@ -3,7 +3,7 @@ class CollectionManager {
 	constructor(structName) {
 		this.structName = structName;
 	}
-	async find(filter) {
+	find(filter = {}) {
 		return new Subcollection(
 			db.collection(this.structName).find(filter),
 			this.structName
@@ -31,14 +31,36 @@ class Subcollection {
 		this.structName = structName;
 	}
 	forEach(cb) {
-		return this._cursor.forEach(async (rawElement) => {
+		return this.cursor.forEach(async (rawElement) => {
 			let elManager = new DataManager(this.structName, rawElement.id);
 			await elManager.fetch();
 			return cb(elManager);
 		});
 	}
+	async filter(cbFilter) {
+		return new Promise((resolve, reject) => {
+			let result = [];
+
+			this.cursor.forEach(
+				(rawElement) => {
+					let elManager = new DataManager(this.structName, rawElement.id);
+					elManager._store = rawElement;
+					if (cbFilter(elManager)) {
+						result.push(elManager);
+					}
+				},
+				(error) => {
+					if (error) {
+						reject(error);
+					} else {
+						resolve(result);
+					}
+				}
+			);
+		});
+	}
 	async array() {
-		return (await this._cursor.toArray()).map(async (rawElement) => {
+		return (await this.cursor.toArray()).map(async (rawElement) => {
 			let elManager = new DataManager(this.structName, rawElement.id);
 			await elManager.fetch();
 			return elManager;
@@ -46,7 +68,9 @@ class Subcollection {
 	}
 	async map(cb) {
 		return await Promise.all(
-			(await this.array()).map(async (rawElement) => {
+			(
+				await this.array()
+			).map(async (rawElement) => {
 				let elManager = new DataManager(this.structName, rawElement.id);
 				await elManager.fetch();
 				return cb(elManager);
