@@ -1,7 +1,7 @@
 const { APIMessage, Structures } = require("discord.js");
 module.exports = () => {
 	class Message extends Structures.get("Message") {
-		async inlineReply(content, options) {
+		async inlineReply(options) {
 			const mentionRepliedUser =
 				typeof ((options || content || {}).allowedMentions || {})
 					.repliedUser === "undefined"
@@ -12,7 +12,7 @@ module.exports = () => {
 			const apiMessage =
 				content instanceof APIMessage
 					? content.resolveData()
-					: APIMessage.create(this.channel, content, options).resolveData();
+					: APIMessage.create(this.channel, { options }).resolveData();
 			Object.assign(apiMessage.data, {
 				message_reference: { message_id: this.id },
 			});

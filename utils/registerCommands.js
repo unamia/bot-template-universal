@@ -1,42 +1,62 @@
 let fs = require("fs-extra"),
 	path = require("path");
+const config = require("../config");
 module.exports = async function registerCommands(root, dir) {
-	return await Promise.all(
+	await client.application.commands.set([]);
+	await Promise.all(
 		fs.readdirSync(dir, { withFileTypes: true }).map(async (fse) => {
-			let cid = utils.get("idMaker")("cmd");
-			let nameFromFile = fse.name.split(".");
-			nameFromFile = (nameFromFile.length > 1
-				? nameFromFile.slice(0, -1)
-				: nameFromFile
-			).join(".");
-			let command = {};
-			command.root = root;
+			let name = fse.name.split(".");
+			name = (name.length > 1 ? name.slice(0, -1) : name).join(".");
+			let command = {
+				root,
+				name,
+				perms: [],
+				options: [],
+				userPerms: [],
+				description: "Description placeholder",
+				public: true,
+				...require(path.join(dir, fse.name)),
+			};
 
-			command.names = [nameFromFile];
-			command.id = cid;
-			command.userPerms = [];
-			command.botPerms = [];
-			command.description = null;
-			command.usage = null;
-			if (fse.isDirectory()) {
-				let subcommands = await registerCommands(cid, path.join(dir, fse.name));
-
-				let replyEmbed = new Discord.MessageEmbed()
-					.setColor("BLUE")
-					.setTitle(`Subcommands of ${nameFromFile}`);
-				subcommands.forEach((sc) => {
-					replyEmbed.addField(sc.names[0], sc.description, true);
-				});
-				command.run = async (message, args) => {
-					message.inlineReply(replyEmbed);
-				};
-			} else {
-				let mod = require(path.join(dir, fse.name));
-				command.names = [...command.names, ...(fse.altNames || [])];
-				command = { ...command, ...mod };
-			}
-			commands.push([cid, command]);
+			client.slashCommands.set(name, command);
 			return command;
 		})
 	);
+	client.slashCommands = new Discord.Collection(
+		await Promise.all(
+			(
+				await client.application.commands.set(
+					client.slashCommands.map((command) => {
+						return {
+							name: command.name,
+							description: command.description,
+							options: command.options,
+							defaultPermission: command.public,
+						};
+					}),
+					"855149762399698964"
+				)
+			).map(async (slashCommand) => {
+				let command = client.slashCommands.find(
+					(c) => c.name == slashCommand.name
+				);
+				command.slash = slashCommand;
+				command.id = slashCommand.id;
+				await command.slash.setPermissions(
+					[
+						...command.perms,
+						...config.admins.map((admin) => ({
+							id: admin,
+							type: "USER",
+							permission: true,
+						})),
+					],
+					config.systemGuild
+				);
+				return [command.id, command];
+			})
+		)
+	);
+
+	return;
 };

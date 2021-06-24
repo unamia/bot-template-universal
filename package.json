@@ -1,16 +1,26 @@
 {
-	"name": "replica",
+	"name": "discord-template",
 	"version": "1.0.0",
-	"description": "Trion Warrior from Worlds Trigger",
+	"description": "Universal discord bot template",
 	"main": "index.js",
-	"repository": "https://github.com/angrymouse/replica",
+	"repository": "https://github.com/angrymouse/bot-template-universal",
 	"author": "Angrymouse",
-	"license": "Private",
-	"private": true,
+	"license": "ISC",
+	"private": false,
 	"dependencies": {
-		"discord.js": "^12.5.1",
+		"discord.js": "discordjs/discord.js",
 		"fs-extra": "^9.1.0",
 		"mongodb": "^3.6.5",
 		"sharp": "^0.28.0"
-	}
+	},
+	"keywords": [
+		"discord",
+		"discord-bot",
+		"bot",
+		"bot-template",
+		"template",
+		"discord-template",
+		"discord-bot-template",
+		"discord.js"
+	]
 }

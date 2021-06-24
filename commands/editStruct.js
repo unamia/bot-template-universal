@@ -3,8 +3,11 @@ exports.run = async (message, args) => {
 		return;
 	}
 	let [structName, ...structTemplate] = args;
-	structTemplate = JSON.parse(structTemplate.join(""));
-
+	try {
+		structTemplate = JSON.parse(structTemplate.join(""));
+	} catch (e) {
+		message.inlineReply("Struct content must be JSON!");
+	}
 	let inserted = await db
 		.collection("structures")
 		.findOneAndUpdate(
@@ -12,6 +15,7 @@ exports.run = async (message, args) => {
 			{ $set: { template: structTemplate } },
 			{ upsert: true }
 		);
+	await db.collection(structName).updateMany({}, { $set: structTemplate });
 	message.inlineReply(
 		new Discord.MessageEmbed().setDescription(
 			"```json\n" + JSON.stringify(inserted.value) + "```"
