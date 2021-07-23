@@ -10,6 +10,7 @@ class DataManager {
 	async fetch() {
 		if (stores[this.structName].get(this.id)) {
 			this._store = stores[this.structName].get(this.id);
+			return this
 		} else {
 			let fetchedFromDb = await db
 				.collection(this.structName)
@@ -39,6 +40,7 @@ class DataManager {
 			this._store = prettied;
 
 			stores[this.structName].set(this.id, this._store);
+			return this
 		}
 	}
 	get(prop) {
